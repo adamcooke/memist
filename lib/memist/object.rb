@@ -9,7 +9,7 @@ module Memist
       define_method "#{method}_with_memoization" do
         @memoized_values ||= {}
         if @memoized_values.has_key?(method)
-          @memoized_values[method]
+          @memoized_values[method].memoized!
         else
           @memoized_values[method] = send("#{method}_without_memoization")
         end
@@ -51,6 +51,15 @@ module Memist
   end
 
   module InstanceMethods
+    def memoized!
+      @memoized = true unless frozen?
+      self
+    end
+
+    def memoized?
+      !!@memoized
+    end
+
     def write_attribute_with_memoization_flush(attr_name, value)
       flush_memoization_by_attribute(attr_name)
       write_attribute_without_memoization_flush(attr_name, value)

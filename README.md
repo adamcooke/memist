@@ -77,4 +77,9 @@ person.flush_memoization_cache
 
 # Clear the cache for a single method on the model
 person.flush_memoization_cache(:age)
+
+# Find out of a vale is memoized or not? When the value has been returned from
+# memoized cache, it will be true otherwise it will be false.
+person.age.memoized?    #=> false
+person.age.memoized?    #=> true
 ```

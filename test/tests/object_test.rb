@@ -53,4 +53,12 @@ class ObjectTest < Minitest::Test
     assert_equal false, person.is_called_adam?
   end
 
+  def test_object_tainting
+    person = Person.new
+    person.first_name = "Bob"
+    person.last_name = "Lyall"
+    assert_equal false, person.full_name.memoized?
+    assert_equal true, person.full_name.memoized?
+  end
+
 end
