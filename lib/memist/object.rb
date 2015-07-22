@@ -8,7 +8,11 @@ module Memist
 
       define_method "#{method}_with_memoization" do
         @memoized_values ||= {}
-        @memoized_values[method] ||= send("#{method}_without_memoization")
+        if @memoized_values.has_key?(method)
+          @memoized_values[method]
+        else
+          @memoized_values[method] = send("#{method}_without_memoization")
+        end
       end
 
       self.memoized_methods[method] = options
