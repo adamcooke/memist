@@ -26,8 +26,8 @@ method to our object.
 ```ruby
 person = Person.new
 person.date_of_birth = Date.new(1986, 6, 10)
-person.age      #=> 29 (retreived by calculation)
-person.age      #=> 29 (retreived from the cache based)
+person.age      #=> 29 (retrieved by calculation)
+person.age      #=> 29 (retrieved from the cache based)
 ```
 
 Unlike other libraries, Memist can also ensure that the cached value is cleared
