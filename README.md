@@ -7,12 +7,21 @@ than others. Let's jump right into a demonstration.
 ```ruby
 class Person
 
+  include Memist::Memoizable
+
   attr_accessor :first_name, :last_name, :date_of_birth
 
   def age
     Age.from_date_of_birth(date_of_birth)
   end
-  memoize :age, :uses => [:date_of_birth]
+  memoize :age
+
+  # Memist can also cache the results from methods that accept a single
+  # argument. The cache will be based on the argument provided.
+  def tweets(username)
+    Twitter.tweets_for_username(username)
+  end
+  memoize :tweets
 
 end
 ```
@@ -30,20 +39,6 @@ person.age      #=> 29 (retrieved by calculation)
 person.age      #=> 29 (retrieved from the cache based)
 ```
 
-Unlike other libraries, Memist can also ensure that the cached value is cleared
-whenever dependent fields are changed. In this example, when the date of birth
-is changed, the age should also be re-calculated.
-
-```ruby
-person = Person.new
-person.date_of_birth = Date.new(1986,6, 10)
-person.age  #=> 29
-person.age  #=> 29 (from cache)
-person.date_of_birth = Date.new(1985, 6, 10)
-person.age  #=> 30
-person.age  #=> 30 (from cache)
-```
-
 ## Installation
 
 Simple. Just add the gem to your Gemfile and we'll handle the rest. Memist works
@@ -58,11 +53,6 @@ gem 'memist', '~> 1.0'
 You need to specify which fields you want to be memoized in your objects. You
 do this by calling `memoize` as shown above.
 
-You can optionally provide an array of attributes as a `:uses` option. This will
-ensure that the cached value is cleared when any of these attributes are cleared.
-You can also specify other memozied methods in this array and their attributes
-will be cleared too.
-
 #### Other handy methods
 
 ```ruby
@@ -73,10 +63,10 @@ person.date_of_birth = Date.new(1986, 6, 10)
 person.age_without_memoization    #=> 29
 
 # Clear the cache for all methods on the model
-person.flush_memoization_cache
+person.flush_memoization
 
 # Clear the cache for a single method on the model
-person.flush_memoization_cache(:age)
+person.flush_memoization(:age)
 
 # Find out of a vale is memoized or not? When the value has been returned from
 # memoized cache, it will be true otherwise it will be false.

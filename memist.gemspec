@@ -1,12 +1,15 @@
+require File.expand_path('lib/memist/version', __dir__)
 Gem::Specification.new do |s|
-  s.name          = "memist"
-  s.description   = %q{A Ruby Memoization Helper}
+  s.name          = 'memist'
+  s.description   = 'A Ruby Memoization Helper'
   s.summary       = s.description
-  s.homepage      = "https://github.com/adamcooke/memist"
-  s.version       = "1.0.0"
-  s.files         = Dir.glob("{lib}/**/*")
-  s.require_paths = ["lib"]
-  s.authors       = ["Adam Cooke"]
-  s.email         = ["me@adamcooke.io"]
+  s.homepage      = 'https://github.com/adamcooke/memist'
+  s.version       = Memist::VERSION
+  s.files         = Dir.glob('{lib}/**/*')
+  s.require_paths = ['lib']
+  s.authors       = ['Adam Cooke']
+  s.email         = ['me@adamcooke.io']
   s.licenses      = ['MIT']
+  s.cert_chain    = ['certs/adamcooke.pem']
+  s.signing_key   = File.expand_path('~/.ssh/gem-private_key.pem') if $PROGRAM_NAME =~ /gem\z/
 end
