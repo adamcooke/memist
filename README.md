@@ -41,16 +41,15 @@ person.age      #=> 29 (retrieved from the cache based)
 
 ## Installation
 
-Simple. Just add the gem to your Gemfile and we'll handle the rest. Memist works
-with any Ruby Object and has special support to handle Active Record classes too.
+Simple. Just add the gem to your Gemfile.
 
 ```ruby
-gem 'memist', '~> 1.0'
+gem 'memist', '~> 2.0'
 ```
 
 ## Usage
 
-You need to specify which fields you want to be memoized in your objects. You
+Firstly, include `Memist::Memozation` in any class you wish to add memoization to. Then, you need to specify which fields you want to be memoized in your objects. You
 do this by calling `memoize` as shown above.
 
 #### Other handy methods
