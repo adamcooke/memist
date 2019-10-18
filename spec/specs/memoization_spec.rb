@@ -27,6 +27,7 @@ describe Memist::Memoizable do
     object = SomeObject.new
     expect(object.times).to eq 1
     expect(object.times).to eq 1
+    expect(object.times).to be_a Integer
   end
 
   it 'should not be marked as memoized until it has been calld' do
@@ -40,6 +41,13 @@ describe Memist::Memoizable do
     object = SomeObject.new
     expect(object.times).to eq 1
     expect(object.times_without_memoization).to eq 2
+    expect(object.times).to eq 1
+  end
+
+  it 'should be able to skip memoization using the "bang" method' do
+    object = SomeObject.new
+    expect(object.times).to eq 1
+    expect(object.times!).to eq 2
     expect(object.times).to eq 1
   end
 

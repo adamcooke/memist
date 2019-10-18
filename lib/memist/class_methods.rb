@@ -10,10 +10,12 @@ module Memist
         if @memoized_values.key?(method) && @memoized_values[method].key?(arg)
           @memoized_values[method][arg]
         else
-          @memoized_values[method][arg] = send("#{method}_without_memoization", *arg)
+          value = send("#{method}_without_memoization", *arg)
+          @memoized_values[method][arg] = value
         end
       end
 
+      alias_method "#{method}!", method
       alias_method "#{method}_without_memoization", method
       alias_method method, "#{method}_with_memoization"
     end
