@@ -21,6 +21,11 @@ describe Memist::Memoizable do
     def name(first, last)
       "#{first} #{last}"
     end
+
+    def say_hello_and_goodbye(full_name)
+      [say_hello(full_name), "Goodbye #{full_name}!"]
+    end
+    memoize :say_hello_and_goodbye, depends_on: [:say_hello]
   end
 
   it 'should cache the value after the first call' do
@@ -44,11 +49,11 @@ describe Memist::Memoizable do
     expect(object.times).to eq 1
   end
 
-  it 'should be able to skip memoization using the "bang" method' do
+  it 'should be able flush and then return when using the bang method' do
     object = SomeObject.new
     expect(object.times).to eq 1
     expect(object.times!).to eq 2
-    expect(object.times).to eq 1
+    expect(object.times).to eq 2
   end
 
   it 'should be able to clear the cache' do
@@ -78,5 +83,23 @@ describe Memist::Memoizable do
     expect do
       SomeObject.memoize :name
     end.to raise_error ArgumentError, /because it accepts more than one arg/
+  end
+
+  it 'should flush dependencies' do
+    object = SomeObject.new
+    expect(object.say_hello('Adam')).to eq 'Hello Adam! 1'
+    expect(object.say_hello_and_goodbye('Adam')[0]).to eq 'Hello Adam! 1'
+    expect(object.say_hello_and_goodbye('Adam')[1]).to eq 'Goodbye Adam!'
+    object.flush_memoization(:say_hello_and_goodbye)
+    expect(object.say_hello_and_goodbye('Adam')[0]).to eq 'Hello Adam! 2'
+    expect(object.say_hello('Adam')).to eq 'Hello Adam! 2'
+  end
+
+  it 'should always use non memoized values' do
+    object = SomeObject.new
+    expect(object.say_hello('Adam')).to eq 'Hello Adam! 1'
+    expect(object.say_hello_and_goodbye('Adam')[0]).to eq 'Hello Adam! 1'
+    expect(object.say_hello!('Adam')).to eq 'Hello Adam! 2'
+    expect(object.say_hello_and_goodbye!('Adam')[0]).to eq 'Hello Adam! 3'
   end
 end
