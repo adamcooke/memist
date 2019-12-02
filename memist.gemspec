@@ -11,5 +11,5 @@ Gem::Specification.new do |s|
   s.email         = ['me@adamcooke.io']
   s.licenses      = ['MIT']
   s.cert_chain    = ['certs/adamcooke.pem']
-  s.signing_key   = File.expand_path('~/.ssh/gem-private_key.pem') if $PROGRAM_NAME =~ /gem\z/
+  s.signing_key   = File.expand_path('~/.gem/signing-key.pem') if $PROGRAM_NAME =~ /gem\z/
 end
