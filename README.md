@@ -69,6 +69,14 @@ person.flush_memoization(:age)
 
 # Find out of a vale is memoized or not? When the value has been returned from
 # memoized cache, it will be true otherwise it will be false.
-person.age.memoized?    #=> false
-person.age.memoized?    #=> true
+person.memoized?(:age)    #=> false
+person.memoized?(:age)    #=> true
+
+# Disable memoization for all calls to memoized methods for a
+# block of code
+person.without_memoization do
+  person.age                #=> 29 [no cache]
+  person.memoized?(:age)    #=> false
+  person.age                #=> 29 [no cache]
+end
 ```

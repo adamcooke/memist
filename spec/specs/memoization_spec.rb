@@ -102,4 +102,27 @@ describe Memist::Memoizable do
     expect(object.say_hello!('Adam')).to eq 'Hello Adam! 2'
     expect(object.say_hello_and_goodbye!('Adam')[0]).to eq 'Hello Adam! 3'
   end
+
+  it 'should be able to disable all memoization for a block' do
+    object = SomeObject.new
+    object.without_memoization do
+      expect(object.times).to eq 1
+      expect(object.times).to eq 2
+      expect(object.times).to eq 3
+    end
+  end
+
+  it 'should allow memoization to be disabled in a nested fashion' do
+    object = SomeObject.new
+    object.without_memoization do
+      expect(object.times).to eq 1
+      expect(object.times).to eq 2
+      object.without_memoization do
+        expect(object.times).to eq 3
+        expect(object.times).to eq 4
+      end
+      expect(object.times).to eq 5
+      expect(object.times).to eq 6
+    end
+  end
 end

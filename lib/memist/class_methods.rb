@@ -13,12 +13,16 @@ module Memist
       end
 
       define_method "#{method}_with_memoization" do |arg = nil|
-        @memoized_values ||= Hash.new { |hash, key| hash[key] = {} }
-        if @memoized_values.key?(method) && @memoized_values[method].key?(arg)
-          @memoized_values[method][arg]
+        if memoize?
+          @memoized_values ||= Hash.new { |hash, key| hash[key] = {} }
+          if @memoized_values.key?(method) && @memoized_values[method].key?(arg)
+            @memoized_values[method][arg]
+          else
+            value = send("#{method}_without_memoization", *arg)
+            @memoized_values[method][arg] = value
+          end
         else
-          value = send("#{method}_without_memoization", *arg)
-          @memoized_values[method][arg] = value
+          send("#{method}_without_memoization", *arg)
         end
       end
 

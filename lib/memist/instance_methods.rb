@@ -27,5 +27,18 @@ module Memist
     def memoized?(method)
       !!(@memoized_values && @memoized_values.include?(method.to_sym))
     end
+
+    def without_memoization
+      Thread.current[:without_memoization] ||= 0
+      Thread.current[:without_memoization] += 1
+      yield
+    ensure
+      Thread.current[:without_memoization] -= 1
+    end
+
+    def memoize?
+      Thread.current[:without_memoization].nil? ||
+      Thread.current[:without_memoization] <= 0
+    end
   end
 end
